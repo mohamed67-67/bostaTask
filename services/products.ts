@@ -12,3 +12,8 @@ export const createProduct = async (item: ICreateItem) => {
   const res = await axios.post("/products", { ...item });
   return res.data;
 };
+
+export const getProductById = async (id: string | number) => {
+  const res = await axios.get(`/products/${id}`);
+  return res.data;
+};

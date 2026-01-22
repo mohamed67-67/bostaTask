@@ -1,35 +1,48 @@
+"use client";
+
+import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getProductById } from "@/services/products";
+import InlineLoader from "@/components/Loaders/InlineLoader";
 import ItemDetailsClientComp from "@/components/views/ItemDetails/page";
 import { ICartItem } from "@/interfaces/stateInterfaces";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
-export async function generateStaticParams() {
-  try {
-    const items: ICartItem[] = await fetch(
-      "https://fakestoreapi.com/products",
-    ).then((res) => res.json());
-    return items.map((item) => ({
-      id: String(item.id),
-    }));
-  } catch {
-    return [];
+export default function ItemDetailsPage() {
+  const { id } = useParams();
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => getProductById(id as string),
+  });
+
+  if (isLoading) {
+    return (
+      <div className="py-5 sm:py-10 w-full flex justify-center">
+        <InlineLoader size={50} />
+      </div>
+    );
   }
-}
 
-export default async function ItemDetailsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const item: ICartItem = await fetch(`https://fakestoreapi.com/products/${id}`)
-    .then((res) => res?.json())
-    .catch(() => {
-      return {
-        error: "failed to fetch",
-      };
-    });
+  if (isError) {
+    return (
+      <div className="py-5 sm:py-10 w-full text-center">
+        <p>Error loading product: {error?.message || "Unknown error"}</p>
+        <Link href="/" className="text-secondary">Go back to products</Link>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="py-5 sm:py-10 w-full text-center">
+        <p>Product not found</p>
+        <Link href="/" className="text-secondary">Go back to products</Link>
+      </div>
+    );
+  }
+
+  const item: ICartItem = data;
 
   return (
     <div className="py-5 sm:py-10 w-full">
