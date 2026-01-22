@@ -20,7 +20,7 @@ export default async function ItemDetailsPage({
 }) {
   const { id } = await params;
   const item: ICartItem = await fetch(
-    `https://fakestoreapi.com/products/${id}`,
+    `https://fakestoreapi.com/products/${id ?? 1}`,
   ).then((res) => res?.json());
 
   return (
