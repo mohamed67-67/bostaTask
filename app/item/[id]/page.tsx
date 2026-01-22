@@ -26,7 +26,9 @@ export default async function ItemDetailsPage({
   const item: ICartItem = await fetch(`https://fakestoreapi.com/products/${id}`)
     .then((res) => res?.json())
     .catch(() => {
-      return notFound();
+      return {
+        error: "failed to fetch",
+      };
     });
 
   return (
