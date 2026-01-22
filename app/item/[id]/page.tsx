@@ -2,7 +2,7 @@ import ItemDetailsClientComp from "@/components/views/ItemDetails/page";
 import { ICartItem } from "@/interfaces/stateInterfaces";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+// import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
   const items: ICartItem[] = await fetch(
@@ -19,11 +19,9 @@ export default async function ItemDetailsPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const item: ICartItem = await fetch(`https://fakestoreapi.com/products/${id}`)
-    .then((res) => res?.json())
-    .catch(() => {
-      return notFound();
-    });
+  const item: ICartItem = await fetch(
+    `https://fakestoreapi.com/products/${id}`,
+  ).then((res) => res?.json());
 
   return (
     <div className="py-5 sm:py-10 w-full">

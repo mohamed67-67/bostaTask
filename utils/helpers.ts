@@ -1,4 +1,3 @@
-import ItemCard from "@/components/ItemCard";
 import { ICartItem } from "@/interfaces/stateInterfaces";
 import { toast } from "sonner";
 
